@@ -17,7 +17,7 @@ dotenv.config();
 
 app.use(
   session({
-    secret: process.env.SECRET_KEY || 'authorshaven',
+    secret: process.env.SECRET_KEY || 'ninjas-game',
     cookie: { maxAge: 60000 },
     resave: true,
     saveUninitialized: true
