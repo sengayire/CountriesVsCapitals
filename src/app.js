@@ -4,6 +4,7 @@ import express from 'express';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import session from 'express-session';
 import passport from 'passport';
 import socketIo from 'socket.io';
 import routes from './routes';
@@ -13,6 +14,15 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 dotenv.config();
+
+app.use(
+  session({
+    secret: process.env.SECRET_KEY || 'authorshaven',
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+  })
+);
 
 app.use(logger('dev'));
 
