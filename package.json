@@ -1,0 +1,49 @@
+{
+  "name": "ninjas-game-backend",
+  "version": "1.0.0",
+  "description": "game",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google": "^0.3.0",
+    "passport-google-oauth": "^2.0.0",
+    "passport-twitter": "^1.0.4",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "nodemon": "^1.19.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node src/index.js",
+    "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rwajon/ninjas-game-backend.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "ninjas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rwajon/ninjas-game-backend/issues"
+  },
+  "homepage": "https://github.com/rwajon/ninjas-game-backend#readme"
+}
