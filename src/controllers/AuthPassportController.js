@@ -45,7 +45,7 @@ export default class AuthPassportController {
    * @returns {object} an object containing user information
    */
   static async loginOrSignup(req, res) {
-    const { APP_URL_FRONTEND, APP_URL_BACKEND, NODE_ENV } = process.env;
+    const { APP_URL_FRONTEND } = process.env;
     const user = req.user || req.body || {};
     if (!Object.keys(user).length) {
       return res.status(status.BAD_REQUEST).json({ errors: { body: 'should not be empty' } });
@@ -53,10 +53,6 @@ export default class AuthPassportController {
     const profile = AuthPassportController.getSocialMediaUser(user);
     res.cookie('user', JSON.stringify({ profile }), {
       expires: new Date(Date.now() + 86400000),
-      domain:
-        NODE_ENV === 'production'
-          ? APP_URL_BACKEND.substr(APP_URL_BACKEND.lastIndexOf('://') + 3)
-          : 'localhost',
       httpOnly: false
     });
     res.redirect(302, `${APP_URL_FRONTEND}/game`);
