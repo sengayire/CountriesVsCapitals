@@ -45,14 +45,18 @@ export default class AuthPassportController {
    * @returns {object} an object containing user information
    */
   static async loginOrSignup(req, res) {
-    const { APP_URL_FRONTEND } = process.env;
+    const { APP_URL_FRONTEND, NODE_ENV } = process.env;
     const user = req.user || req.body || {};
     if (!Object.keys(user).length) {
       return res.status(status.BAD_REQUEST).json({ errors: { body: 'should not be empty' } });
     }
     const profile = AuthPassportController.getSocialMediaUser(user);
     res.cookie('user', JSON.stringify({ profile }), {
-      expires: new Date(Date.now() + 86400000)
+      expires: new Date(Date.now() + 86400000),
+      domain:
+        NODE_ENV === 'production'
+          ? APP_URL_FRONTEND.substr(APP_URL_FRONTEND.lastIndexOf('://') + 3)
+          : 'localhost'
     });
     res.redirect(302, `${APP_URL_FRONTEND}/game`);
   }
