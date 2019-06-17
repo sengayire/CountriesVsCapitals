@@ -56,7 +56,8 @@ export default class AuthPassportController {
       domain:
         NODE_ENV === 'production'
           ? APP_URL_BACKEND.substr(APP_URL_BACKEND.lastIndexOf('://') + 3)
-          : 'localhost'
+          : 'localhost',
+      httpOnly: false
     });
     res.redirect(302, `${APP_URL_FRONTEND}/game`);
   }
