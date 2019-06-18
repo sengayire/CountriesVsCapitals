@@ -23,15 +23,7 @@ export default (input) => {
     password: Joi.string()
       .min(8)
       .max(100)
-      .required(),
-    role: Joi.string()
-      .min(2)
-      .max(100)
-      .optional(),
-    permissions: Joi.string()
-      .min(2)
-      .max(255)
-      .optional()
+      .required()
   });
 
   return Joi.validate(input, schema, { abortEarly: false });
