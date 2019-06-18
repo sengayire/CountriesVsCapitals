@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import status from '../config/status';
+import { User } from '../queries';
+import * as helper from '../helpers';
 
 dotenv.config();
 
@@ -45,16 +47,27 @@ export default class AuthPassportController {
    * @returns {object} an object containing user information
    */
   static async loginOrSignup(req, res) {
-    const { APP_URL_FRONTEND } = process.env;
     const user = req.user || req.body || {};
     if (!Object.keys(user).length) {
       return res.status(status.BAD_REQUEST).json({ errors: { body: 'should not be empty' } });
     }
-    const profile = AuthPassportController.getSocialMediaUser(user);
-    res.cookie('user', JSON.stringify({ profile }), {
-      expires: new Date(Date.now() + 86400000),
-      httpOnly: false
-    });
-    res.redirect(302, `${APP_URL_FRONTEND}/game`);
+    const newOrExistingUser = await User.findOrCreate(
+      { accountProvider: user.provider, accountProviderUserId: user.id },
+      AuthPassportController.getSocialMediaUser(user)
+    );
+
+    if (newOrExistingUser.errors) {
+      const errors = helper.checkCreateUpdateUserErrors(newOrExistingUser.errors);
+      const statusCode = errors.code;
+      delete errors.code;
+      return res.status(statusCode).json(errors);
+    }
+
+    res.redirect(
+      302,
+      `${process.env.APP_URL_FRONTEND}/auth/${helper.token.generate({
+        id: newOrExistingUser[0].id
+      })}`
+    );
   }
 }
