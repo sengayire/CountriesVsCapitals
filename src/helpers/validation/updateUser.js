@@ -29,17 +29,7 @@ export default (input) => {
       .optional(),
     image: Joi.string()
       .min(5)
-      .optional(),
-    role: Joi.string()
-      .min(2)
-      .max(10)
-      .regex(/^[a-zA-Z]{2,10}$/)
-      .optional(),
-    permissions: Joi.string()
-      .min(5)
-      .max(255)
-      .optional(),
-    isActive: Joi.boolean().optional()
+      .optional()
   });
 
   return Joi.validate(input, schema, { abortEarly: false });
