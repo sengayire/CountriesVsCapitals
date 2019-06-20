@@ -8,6 +8,8 @@ import session from 'express-session';
 import passport from 'passport';
 import socketIo from 'socket.io';
 import routes from './routes';
+import db from './models';
+import GamingRoomController from './controllers/GamingRoomController';
 
 const app = express();
 const server = http.createServer(app);
@@ -57,6 +59,43 @@ app.use((err, req, res, next) => {
     error: err.status
   });
   next();
+});
+
+const gamingRoom = new GamingRoomController();
+io.on('connection', (socket) => {
+  socket.on('createRoom', (member, room) => {
+    const createdRoom = gamingRoom.createRoom(member, room);
+    if (!createdRoom.isRoom) {
+      socket.emit('createdRoom', createdRoom.newRoom);
+    }
+  });
+
+  socket.on('newMember', (member, room) => {
+    const joinedRoom = gamingRoom.joinRoom(member, room);
+    socket.emit('newMember', member, joinedRoom.room);
+    socket.broadcast.emit('newMember', member, joinedRoom.room);
+  });
+
+  socket.on('changeQuestion', (room) => {
+    const updatedRoom = gamingRoom.changeQuestion(room);
+    socket.emit('changeQuestion', updatedRoom);
+    socket.broadcast.emit('changeQuestion', updatedRoom);
+  });
+
+  socket.on('answerQuestion', (point, member, room) => {
+    const updatedRoom = gamingRoom.answerQuestion(point, member, room);
+    socket.emit('answerQuestion', point, member, updatedRoom);
+    socket.broadcast.emit('answerQuestion', point, member, updatedRoom);
+  });
+
+  socket.on('leaveGame', (member, room) => {
+    socket.broadcast.emit('leftGame', gamingRoom.leaveRoom(member, room));
+  });
+
+  socket.on('replayGame', (member, room) => {
+    socket.emit('gameReplayed', gamingRoom.replayGame(member, room));
+    socket.broadcast.emit('gameReplayed', gamingRoom.replayGame(member, room));
+  });
 });
 
 app.server = server;
